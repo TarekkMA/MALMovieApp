@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.snappydb.DB;
+import com.snappydb.DBFactory;
 import com.tmaproject.malmovieapp.R;
 import com.tmaproject.malmovieapp.models.networking.Movie;
 import com.tmaproject.malmovieapp.views.adapters.SectionsPagerAdapter;

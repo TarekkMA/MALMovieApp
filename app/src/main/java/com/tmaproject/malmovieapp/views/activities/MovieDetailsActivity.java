@@ -15,10 +15,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.snappydb.SnappydbException;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+import com.tmaproject.malmovieapp.MyApp;
 import com.tmaproject.malmovieapp.R;
 import com.tmaproject.malmovieapp.logic.TagLayout;
 import com.tmaproject.malmovieapp.logic.TheMoviedbAPI;
@@ -43,6 +46,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     public static final String ARG_MOVIE_JSON = "MOVIE<<LML<TMA";
 
     private Movie movie;
+    private boolean isFavorite =false;
 
     //This is not the normal CollapsingToolbarLayout
     //see https://github.com/opacapp/multiline-collapsingtoolbar
@@ -53,6 +57,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private RecyclerView mainList;
     private MovieDetailsAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,13 +65,19 @@ public class MovieDetailsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        movie = new Gson().fromJson(getIntent().getStringExtra(ARG_MOVIE_JSON),Movie.class);
+        movie = new Gson().fromJson(getIntent().getStringExtra(ARG_MOVIE_JSON), Movie.class);
         adapter = new MovieDetailsAdapter(Arrays.asList(
                 R.layout.item_movie_details,
                 R.layout.item_movie_video,
                 POSTER,
                 BACKDROP
-        ),movie);
+        ), movie);
+
+        try {
+            isFavorite = MyApp.getInstance().getDBManager().getFavoritesDB().exists(movie.getId().toString());
+        } catch (SnappydbException e) {
+            e.printStackTrace();
+        }
 
 
         bindViews();
@@ -76,16 +87,16 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     }
 
-    private void bindViews(){
+    private void bindViews() {
         fab = (FloatingActionButton) findViewById(R.id.fab);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        backgroundIV = ((ImageView)findViewById(R.id.background_image));
+        backgroundIV = ((ImageView) findViewById(R.id.background_image));
 
         //
-        mainList = (RecyclerView)findViewById(R.id.movie_details_list);
+        mainList = (RecyclerView) findViewById(R.id.movie_details_list);
     }
 
-    private void setupViews(){
+    private void setupViews() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mainList.setLayoutManager(layoutManager);
         mainList.setAdapter(adapter);
@@ -93,14 +104,29 @@ public class MovieDetailsActivity extends AppCompatActivity {
         //mainList.smoothScrollToPosition(0);
         //layoutManager.scrollToPositionWithOffset(0,0);
 
-        fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show());
+        fab.setImageResource((isFavorite)?R.drawable.star_filled_96:R.drawable.star_unfilled_96);
+        fab.setOnClickListener(view -> {
+            try {
+                if (isFavorite) {
+                    Snackbar.make(view, "\'" + "Movie" + "\' has been removed from the favorites",Snackbar.LENGTH_LONG).show();
+                    MyApp.getInstance().getDBManager().getFavoritesDB().del(movie.getId().toString());
+                } else {
+                    Snackbar.make(view, "\'" + "Movie" + "\' has been added to the favorites",Snackbar.LENGTH_LONG).show();
+                    MyApp.getInstance().getDBManager().getFavoritesDB().put(movie.getId().toString(), movie);
+                }
+                isFavorite = !isFavorite;
+                fab.setImageResource((isFavorite)?R.drawable.star_filled_96:R.drawable.star_unfilled_96);
+            } catch (SnappydbException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Failed adding \'" + "the movie" + "\' to favorites", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppbar);
         collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppbar);
     }
 
-    private void getDatafromServer(){
+    private void getDatafromServer() {
         TheMoviedbAPI.createService().getMovieDetails(movie.getId()).enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
@@ -119,16 +145,16 @@ public class MovieDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void fillViews(boolean extendedInfo){
+    private void fillViews(boolean extendedInfo) {
         collapsingToolbarLayout.setTitle(movie.getTitle());
 
-        if(extendedInfo){
+        if (extendedInfo) {
             adapter.refreshData(movie);
             Log.d(TAG, "fillViews: Hey adapter view more data");
         }
 
         Picasso.with(this)
-                .load(TheMoviedbAPI.API_IMAGE_500+movie.getBackdropPath())
+                .load(TheMoviedbAPI.API_IMAGE_500 + movie.getBackdropPath())
                 .into(new Target() {
                     @Override
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -137,16 +163,16 @@ public class MovieDetailsActivity extends AppCompatActivity {
                             public void onGenerated(Palette palette) {
                                 Palette.Swatch swatch = palette.getMutedSwatch();
 
-                                int color,colorDarker,colorText;
-                                if(swatch == null){
+                                int color, colorDarker, colorText;
+                                if (swatch == null) {
                                     color = getResources().getColor(R.color.colorPrimary);
                                     colorDarker = getResources().getColor(R.color.colorPrimaryDark);
                                     colorText = Color.WHITE;
-                                }else{
+                                } else {
                                     color = swatch.getRgb();
 
                                     float[] hslColor = swatch.getHsl();
-                                    hslColor[2]-=.025f;
+                                    hslColor[2] -= .025f;
                                     colorDarker = Color.HSVToColor(hslColor);
 
                                     colorText = swatch.getTitleTextColor();

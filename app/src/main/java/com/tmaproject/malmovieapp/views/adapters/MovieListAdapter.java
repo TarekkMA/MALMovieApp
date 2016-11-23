@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.google.gson.Gson;
+import com.snappydb.SnappydbException;
 import com.squareup.picasso.Picasso;
+import com.tmaproject.malmovieapp.MyApp;
 import com.tmaproject.malmovieapp.R;
 import com.tmaproject.malmovieapp.logic.TheMoviedbAPI;
 import com.tmaproject.malmovieapp.models.networking.Movie;
@@ -60,8 +62,13 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.VH> 
             favoriteStarIV = (ImageView)itemView.findViewById(R.id.movieFavoriteStar);
         }
         void bind(final Movie movie){
-
-            favoriteStarIV.setVisibility((movie.getIsFavorite())?View.VISIBLE:View.GONE);
+            boolean isFavorite = false;
+            try {
+                isFavorite = MyApp.getInstance().getDBManager().getFavoritesDB().exists(movie.getId().toString());
+            } catch (SnappydbException e) {
+                e.printStackTrace();
+            }
+            favoriteStarIV.setVisibility((isFavorite)?View.VISIBLE:View.GONE);
 
             Picasso.with(itemView.getContext())
                     .load(TheMoviedbAPI.API_IMAGE_185 +movie.getPosterPath())

@@ -14,11 +14,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.snappydb.DB;
+import com.snappydb.KeyIterator;
+import com.snappydb.SnappydbException;
+import com.tmaproject.malmovieapp.MyApp;
 import com.tmaproject.malmovieapp.R;
 import com.tmaproject.malmovieapp.logic.TheMoviedbAPI;
 import com.tmaproject.malmovieapp.models.networking.Movie;
 import com.tmaproject.malmovieapp.models.networking.request_result.MovieRequestResult;
 import com.tmaproject.malmovieapp.views.adapters.MovieListAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -73,7 +80,11 @@ public class MoviesFragment extends Fragment {
                 hideLoading();
             }
         });
-        requestMoviesFromServer();
+        if(movieType == Movie.MovieType.FAVORITES){
+            requestMoviesFromDatabase();
+        }else {
+            requestMoviesFromServer();
+        }
         return rootView;
     }
 
@@ -100,6 +111,22 @@ public class MoviesFragment extends Fragment {
                 });
     }
 
+    void requestMoviesFromDatabase(){
+        hideLoading();
+        try {
+            DB favDb = MyApp.getInstance().getDBManager().getFavoritesDB();
+            KeyIterator it = favDb.allKeysIterator();
+            List<Movie> movieList= new ArrayList<>();
+            while (it.hasNext()){
+                Movie m = favDb.getObject(it.next(1)[0],Movie.class);
+                movieList.add(m);
+            }
+            movieListAdapter.addPage(movieList);
+        } catch (SnappydbException e) {
+            e.printStackTrace();
+            viewRefresh();
+        }
+    }
     private void viewLoading() {
         loadingLayout.setVisibility(View.VISIBLE);
     }
