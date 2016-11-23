@@ -42,6 +42,11 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.VH> 
         notifyItemRangeChanged(oldLastIndex,moviesList.size()-1);
     }
 
+    public void setData(List<Movie> newList){
+        moviesList = newList;
+        notifyDataSetChanged();
+    }
+
     @Override
     public void onBindViewHolder(VH holder, int position) {
         holder.bind(moviesList.get(position));

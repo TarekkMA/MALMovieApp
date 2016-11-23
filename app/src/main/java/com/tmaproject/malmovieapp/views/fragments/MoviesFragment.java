@@ -121,12 +121,23 @@ public class MoviesFragment extends Fragment {
                 Movie m = favDb.getObject(it.next(1)[0],Movie.class);
                 movieList.add(m);
             }
-            movieListAdapter.addPage(movieList);
+            movieListAdapter.setData(movieList);
         } catch (SnappydbException e) {
             e.printStackTrace();
             viewRefresh();
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (movieType == Movie.MovieType.FAVORITES){
+            requestMoviesFromDatabase();
+        }else{
+            movieListAdapter.notifyDataSetChanged();
+        }
+    }
+
     private void viewLoading() {
         loadingLayout.setVisibility(View.VISIBLE);
     }

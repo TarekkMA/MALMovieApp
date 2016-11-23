@@ -82,8 +82,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         bindViews();
         setupViews();
-        fillViews(false);
-        getDatafromServer();
+        if(movie.getGenres().isEmpty()){//A way to know if the movie has all the data
+            fillViews(false);
+            getDatafromServer();
+        }else{
+            fillViews(true);
+        }
 
     }
 
@@ -152,55 +156,57 @@ public class MovieDetailsActivity extends AppCompatActivity {
             adapter.refreshData(movie);
             Log.d(TAG, "fillViews: Hey adapter view more data");
         }
-
-        Picasso.with(this)
-                .load(TheMoviedbAPI.API_IMAGE_500 + movie.getBackdropPath())
-                .into(new Target() {
+        Picasso.with(this).setLoggingEnabled(true);
+        final ImageView backgroundIV = this.backgroundIV;
+        final Target target = new Target() { //picasso
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                     @Override
-                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                            @Override
-                            public void onGenerated(Palette palette) {
-                                Palette.Swatch swatch = palette.getMutedSwatch();
+                    public void onGenerated(Palette palette) {
+                        Palette.Swatch swatch = palette.getMutedSwatch();
 
-                                int color, colorDarker, colorText;
-                                if (swatch == null) {
-                                    color = getResources().getColor(R.color.colorPrimary);
-                                    colorDarker = getResources().getColor(R.color.colorPrimaryDark);
-                                    colorText = Color.WHITE;
-                                } else {
-                                    color = swatch.getRgb();
+                        int color, colorDarker, colorText;
+                        if (swatch == null) {
+                            color = getResources().getColor(R.color.colorPrimary);
+                            colorDarker = getResources().getColor(R.color.colorPrimaryDark);
+                            colorText = Color.WHITE;
+                        } else {
+                            color = swatch.getRgb();
 
-                                    float[] hslColor = swatch.getHsl();
-                                    hslColor[2] -= .025f;
-                                    colorDarker = Color.HSVToColor(hslColor);
+                            float[] hslColor = swatch.getHsl();
+                            hslColor[2] -= .025f;
+                            colorDarker = Color.HSVToColor(hslColor);
 
-                                    colorText = swatch.getTitleTextColor();
-                                }
+                            colorText = swatch.getTitleTextColor();
+                        }
 
 
-                                collapsingToolbarLayout.setContentScrimColor(color);
-                                collapsingToolbarLayout.setStatusBarScrimColor(colorDarker);
-                                collapsingToolbarLayout.setCollapsedTitleTextColor(colorText);
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                    getWindow().setStatusBarColor(colorDarker);
-                                }
-                            }
-                        });
-                        backgroundIV.setImageBitmap(bitmap);
-                    }
-
-                    @Override
-                    public void onBitmapFailed(Drawable errorDrawable) {
-
-                    }
-
-                    @Override
-                    public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                        backgroundIV.setImageResource(R.drawable.placeholder);
+                        collapsingToolbarLayout.setContentScrimColor(color);
+                        collapsingToolbarLayout.setStatusBarScrimColor(colorDarker);
+                        collapsingToolbarLayout.setCollapsedTitleTextColor(colorText);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            getWindow().setStatusBarColor(colorDarker);
+                        }
                     }
                 });
+                backgroundIV.setImageBitmap(bitmap);
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                backgroundIV.setImageResource(R.drawable.placeholder);
+            }
+        };
+        Picasso.with(this)
+                .load(TheMoviedbAPI.API_IMAGE_500 + movie.getBackdropPath())
+                .into(target);
 
     }
 
