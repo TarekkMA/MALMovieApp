@@ -16,6 +16,7 @@ import java.util.List;
 
 /**
  * Created by TarekMA on 10/20/16.
+ * facebook/tarekkma1
  */
 
 /**************************************
@@ -33,7 +34,7 @@ public class Movie {
         FAVORITES("FAVORITES");
 
         private final String text;
-        private MovieType(final String text) {
+        MovieType(final String text) {
             this.text = text;
         }
         public String getTitle(){
@@ -45,6 +46,10 @@ public class Movie {
             return text;
         }
     }
+
+    @SerializedName("isFavorite")
+    @Expose
+    private Boolean isFavorite = false;
 
     @SerializedName("adult")
     @Expose
@@ -60,7 +65,7 @@ public class Movie {
     private Integer budget;
     @SerializedName("genres")
     @Expose
-    private List<Genre> genres = new ArrayList<Genre>();
+    private List<Genre> genres = new ArrayList<>();
     @SerializedName("homepage")
     @Expose
     private String homepage;
@@ -87,10 +92,10 @@ public class Movie {
     private String posterPath;
     @SerializedName("production_companies")
     @Expose
-    private List<ProductionCompany> productionCompanies = new ArrayList<ProductionCompany>();
+    private List<ProductionCompany> productionCompanies = new ArrayList<>();
     @SerializedName("production_countries")
     @Expose
-    private List<ProductionCountry> productionCountries = new ArrayList<ProductionCountry>();
+    private List<ProductionCountry> productionCountries = new ArrayList<>();
     @SerializedName("release_date")
     @Expose
     private String releaseDate;
@@ -102,7 +107,7 @@ public class Movie {
     private Integer runtime;
     @SerializedName("spoken_languages")
     @Expose
-    private List<SpokenLanguage> spokenLanguages = new ArrayList<SpokenLanguage>();
+    private List<SpokenLanguage> spokenLanguages = new ArrayList<>();
     @SerializedName("status")
     @Expose
     private String status;
@@ -136,6 +141,15 @@ public class Movie {
     @SerializedName("recommendations")
     @Expose
     private MovieRequestResult recommendations;
+
+
+    public Boolean getIsFavorite() {
+        return isFavorite;
+    }
+
+    public void setIsFavorite(Boolean isFavorite) {
+        this.isFavorite = isFavorite;
+    }
 
     /**
      *

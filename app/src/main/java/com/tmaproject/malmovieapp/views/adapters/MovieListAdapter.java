@@ -19,12 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by tarekkma on 10/21/16.
+ * Created by TarekMA on 10/21/16.
+ * facebook/tarekkma1
  */
 
 public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.VH> {
 
-    List<Movie> moviesList =  new ArrayList<>();
+    private List<Movie> moviesList =  new ArrayList<>();
 
     @Override
     public VH onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -52,23 +53,25 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.VH> 
 
     class VH extends RecyclerView.ViewHolder{
         ImageView posterIV;
-        public VH(View itemView) {
+        ImageView favoriteStarIV;
+        VH(View itemView) {
             super(itemView);
             posterIV = (ImageView)itemView.findViewById(R.id.movie_item_poster);
+            favoriteStarIV = (ImageView)itemView.findViewById(R.id.movieFavoriteStar);
         }
-        public void bind(final Movie movie){
+        void bind(final Movie movie){
+
+            favoriteStarIV.setVisibility((movie.getIsFavorite())?View.VISIBLE:View.GONE);
+
             Picasso.with(itemView.getContext())
                     .load(TheMoviedbAPI.API_IMAGE_185 +movie.getPosterPath())
                     .placeholder(R.drawable.placeholder)
                     .into(posterIV);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Context context = itemView.getContext();
-                    context.startActivity(new Intent(context, MovieDetailsActivity.class)
-                    .putExtra(MovieDetailsActivity.ARG_MOVIE_JSON,new Gson().toJson(movie,Movie.class)));
-                }
+            itemView.setOnClickListener(v -> {
+                Context context = itemView.getContext();
+                context.startActivity(new Intent(context, MovieDetailsActivity.class)
+                .putExtra(MovieDetailsActivity.ARG_MOVIE_JSON,new Gson().toJson(movie,Movie.class)));
             });
         }
     }
