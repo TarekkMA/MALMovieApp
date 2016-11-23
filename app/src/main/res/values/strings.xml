@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">My Movie Manager</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_movie_details">MovieDetailsActivity</string>
+    <string name="overview_demo">We always knew they were coming back. Using recovered alien technology, the nations of Earth have collaborated on an immense defense program to protect the planet. But nothing can prepare us for the aliens’ advanced and unprecedented force. Only the ingenuity of a few brave men and women can bring our world back from the brink of extinction.</string>
+</resources>

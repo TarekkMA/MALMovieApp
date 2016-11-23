@@ -1,0 +1,22 @@
+<LinearLayout android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.v7.widget.CardView android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        xmlns:tools="http://schemas.android.com/tools"
+        style="@style/GenreCard"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+        <android.support.v7.widget.AppCompatTextView android:id="@+id/genre_item_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:textColor="#fff"
+            android:textSize="12sp"
+            android:background="#24252B"
+            tools:text="this is hoe to write genre"
+            xmlns:android="http://schemas.android.com/apk/res/android" />
+    </android.support.v7.widget.CardView>
+</LinearLayout>

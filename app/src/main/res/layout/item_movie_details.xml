@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <TextView
+        android:id="@+id/movie_tagline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        tools:text="“ this is the movie tagline ”"
+        android:textSize="16sp"
+        android:textStyle="italic"
+        android:gravity="center"
+        android:layout_below="@id/background_image"/>
+    <LinearLayout
+        android:id="@+id/movie_year_duration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/movie_tagline">
+        <TextView
+            android:id="@+id/movie_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="8/10"
+            android:textSize="18sp"
+            android:textColor="#000"
+            android:gravity="center"
+            android:layout_weight="1"/>
+        <TextView
+            android:id="@+id/movie_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="120 min"
+            android:textSize="18sp"
+            android:textColor="#000"
+            android:gravity="center"
+            android:layout_weight="1"
+            />
+        <TextView
+            android:id="@+id/movie_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="(2015)"
+            android:textSize="18sp"
+            android:textColor="#000"
+            android:gravity="center"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+
+
+
+
+        <uk.co.deanwild.flowtextview.FlowTextView
+            android:id="@+id/movie_plot"
+            android:paddingTop="8dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/overview_demo"
+            android:layout_below="@id/movie_year_duration"
+            >
+            <android.support.v7.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="16dp"
+                style="@style/MoviePosterCard">
+                <ImageView
+                    android:id="@+id/movie_poster"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/poster_demo"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"/>
+            </android.support.v7.widget.CardView>
+
+        </uk.co.deanwild.flowtextview.FlowTextView>
+
+
+    <com.tmaproject.malmovieapp.logic.TagLayout
+        android:id="@+id/movie_genres"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_below="@id/movie_plot"/>
+
+</RelativeLayout>
