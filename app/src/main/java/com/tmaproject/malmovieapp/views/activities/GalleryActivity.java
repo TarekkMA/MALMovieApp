@@ -8,11 +8,12 @@ import android.os.Bundle;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.tmaproject.malmovieapp.R;
 import com.tmaproject.malmovieapp.models.networking.Image;
 import com.tmaproject.malmovieapp.views.adapters.GalleryPagerAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GalleryActivity extends AppCompatActivity {
@@ -21,11 +22,12 @@ public class GalleryActivity extends AppCompatActivity {
     public static final String TITLE= "TITLE";
 
     public static Intent getIntent(Context c, String title, List<Image> images, int selectedItem){
-        List<String> urls = Stream.of(images).map(Image::getFilePath).collect(Collectors.toList());
-        return new Intent(c,GalleryActivity.class)
-                .putExtra(TITLE,title)
-                .putStringArrayListExtra(GALLERY_URLS, (ArrayList<String>) urls)
-                .putExtra(SELECTED_ITEM,selectedItem);
+        Bundle b = new Bundle();
+                b.putString(TITLE,title);
+                b.putString(GALLERY_URLS, new Gson().toJson(images));
+                b.putInt(SELECTED_ITEM,selectedItem);
+        return new Intent(c,GalleryActivity.class).putExtras(b);
+
     }
 
     ViewPager viewPager;
@@ -35,7 +37,9 @@ public class GalleryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_gallery);
         setTitle(getIntent().getStringExtra(TITLE));
         viewPager = (ViewPager)findViewById(R.id.view_pager);
-        viewPager.setAdapter(new GalleryPagerAdapter(this,getIntent().getStringArrayExtra(GALLERY_URLS)));
+        List<Image> images = new Gson().fromJson(getIntent().getStringExtra(GALLERY_URLS),
+                new TypeToken<List<Image>>(){}.getType());
+        viewPager.setAdapter(new GalleryPagerAdapter(this,images));
         viewPager.setCurrentItem(getIntent().getIntExtra(SELECTED_ITEM,0));
     }
 }
