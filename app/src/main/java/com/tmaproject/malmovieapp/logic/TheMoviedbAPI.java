@@ -28,6 +28,7 @@ public class TheMoviedbAPI {
     private static final String API_URL = "https://api.themoviedb.org/3/";
     public static final String API_IMAGE_185 = "http://image.tmdb.org/t/p/w185";
     public static final String API_IMAGE_500 = "http://image.tmdb.org/t/p/w500";
+    public static final String API_IMAGE_ORIGINAL = "http://image.tmdb.org/t/p/original";
 
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 

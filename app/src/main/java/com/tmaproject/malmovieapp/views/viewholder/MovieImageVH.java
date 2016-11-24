@@ -1,5 +1,7 @@
 package com.tmaproject.malmovieapp.views.viewholder;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import com.tmaproject.malmovieapp.R;
 import com.tmaproject.malmovieapp.logic.TheMoviedbAPI;
 import com.tmaproject.malmovieapp.models.networking.Image;
 import com.tmaproject.malmovieapp.models.networking.Movie;
+import com.tmaproject.malmovieapp.views.activities.GalleryActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,6 +88,9 @@ public class MovieImageVH extends BaseViewHolder<Movie> {
                             .load(TheMoviedbAPI.API_IMAGE_500+data.getFilePath())
                             .placeholder((isPoster)?R.drawable.placeholder_poster:R.drawable.placeholder_backdrop)
                             .into(image);
+                    Context c = itemView.getContext();
+                    image.setOnClickListener(view ->
+                            c.startActivity(GalleryActivity.getIntent(c,(isPoster)?"Posters":"Backgrounds",images,images.indexOf(image))));
                 }
             }
         });

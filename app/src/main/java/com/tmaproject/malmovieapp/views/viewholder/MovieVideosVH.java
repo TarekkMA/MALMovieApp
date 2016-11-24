@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.tmaproject.malmovieapp.R;
 import com.tmaproject.malmovieapp.logic.ImagesAPI;
+import com.tmaproject.malmovieapp.logic.IntentHelper;
 import com.tmaproject.malmovieapp.models.networking.Image;
 import com.tmaproject.malmovieapp.models.networking.Movie;
 import com.tmaproject.malmovieapp.models.networking.Video;
@@ -72,6 +73,7 @@ public class MovieVideosVH extends BaseViewHolder<Movie> {
                             .placeholder(R.drawable.placeholder_backdrop)
                             .into(videoImg);
                     videoText.setText(data.getName());
+                    itemView.setOnClickListener(view -> IntentHelper.watchYoutubeVideo(itemView.getContext(),data.getKey()));
                 }
             }
         });
