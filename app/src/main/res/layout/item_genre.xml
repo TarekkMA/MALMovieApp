@@ -7,6 +7,7 @@
         android:layout_height="wrap_content"
         xmlns:tools="http://schemas.android.com/tools"
         style="@style/GenreCard"
+        app:cardPreventCornerOverlap="false"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
         <android.support.v7.widget.AppCompatTextView android:id="@+id/genre_item_text"

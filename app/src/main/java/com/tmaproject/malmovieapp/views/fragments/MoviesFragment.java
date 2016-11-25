@@ -19,6 +19,7 @@ import com.snappydb.KeyIterator;
 import com.snappydb.SnappydbException;
 import com.tmaproject.malmovieapp.MyApp;
 import com.tmaproject.malmovieapp.R;
+import com.tmaproject.malmovieapp.logic.ResponsiveUi;
 import com.tmaproject.malmovieapp.logic.TheMoviedbAPI;
 import com.tmaproject.malmovieapp.models.networking.Movie;
 import com.tmaproject.malmovieapp.models.networking.request_result.MovieRequestResult;
@@ -80,7 +81,8 @@ public class MoviesFragment extends Fragment {
         moviesList = (RecyclerView) rootView.findViewById(R.id.movies_list);
         refreshLayout = (RelativeLayout) rootView.findViewById(R.id.refresh_layout);
         loadingLayout = (RelativeLayout) rootView.findViewById(R.id.loading_layout);
-        final GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
+        int numOfCol = ResponsiveUi.calculateNoOfColumns(getContext(),170,true);
+        final GridLayoutManager layoutManager = new GridLayoutManager(getContext(), numOfCol);
         moviesList.setLayoutManager(layoutManager);
         movieListAdapter = new MovieListAdapter();
         moviesList.setAdapter(movieListAdapter);
