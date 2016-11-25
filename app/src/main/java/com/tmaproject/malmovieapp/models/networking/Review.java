@@ -3,10 +3,13 @@ package com.tmaproject.malmovieapp.models.networking;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
 /**
  * Created by tarekkma on 10/21/16.
  */
 
+@Parcel(Parcel.Serialization.BEAN)
 public class Review {
     @SerializedName("id")
     @Expose

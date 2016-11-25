@@ -1,5 +1,6 @@
 package com.tmaproject.malmovieapp.views.activities;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -14,7 +15,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -23,22 +23,24 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.tmaproject.malmovieapp.MyApp;
 import com.tmaproject.malmovieapp.R;
-import com.tmaproject.malmovieapp.logic.TagLayout;
 import com.tmaproject.malmovieapp.logic.TheMoviedbAPI;
 import com.tmaproject.malmovieapp.models.networking.Movie;
 import com.tmaproject.malmovieapp.views.adapters.MovieDetailsAdapter;
 
 import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import uk.co.deanwild.flowtextview.FlowTextView;
 
 import static com.tmaproject.malmovieapp.views.adapters.MovieDetailsAdapter.BACKDROP;
 import static com.tmaproject.malmovieapp.views.adapters.MovieDetailsAdapter.POSTER;
+import static com.tmaproject.malmovieapp.views.adapters.MovieDetailsAdapter.REVIEW;
+import static com.tmaproject.malmovieapp.views.adapters.MovieDetailsAdapter.REVIEWS_HEADER;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
@@ -66,12 +68,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         movie = new Gson().fromJson(getIntent().getStringExtra(ARG_MOVIE_JSON), Movie.class);
-        adapter = new MovieDetailsAdapter(Arrays.asList(
-                R.layout.item_movie_details,
-                R.layout.item_movie_video,
-                POSTER,
-                BACKDROP
-        ), movie);
+        List<Integer> viewOrder = new ArrayList<>();
+        viewOrder.add(R.layout.item_movie_details);
+        adapter = new MovieDetailsAdapter(viewOrder, movie);
 
         try {
             isFavorite = MyApp.getInstance().getDBManager().getFavoritesDB().exists(movie.getId().toString());
@@ -153,10 +152,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
         collapsingToolbarLayout.setTitle(movie.getTitle());
 
         if (extendedInfo) {
-            adapter.refreshData(movie);
+            adapter.fulfilData(movie);
             Log.d(TAG, "fillViews: Hey adapter view more data");
         }
-        Picasso.with(this).setLoggingEnabled(true);
+
         final ImageView backgroundIV = this.backgroundIV;
         final Target target = new Target() { //picasso
             @Override

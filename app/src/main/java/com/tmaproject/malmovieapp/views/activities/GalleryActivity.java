@@ -16,6 +16,8 @@ import com.tmaproject.malmovieapp.views.adapters.GalleryPagerAdapter;
 
 import java.util.List;
 
+import icepick.State;
+
 public class GalleryActivity extends AppCompatActivity {
     public static final String GALLERY_URLS = "GALLERY_URLS";
     public static final String SELECTED_ITEM= "SELECTED_ITEM";
@@ -39,7 +41,8 @@ public class GalleryActivity extends AppCompatActivity {
         viewPager = (ViewPager)findViewById(R.id.view_pager);
         List<Image> images = new Gson().fromJson(getIntent().getStringExtra(GALLERY_URLS),
                 new TypeToken<List<Image>>(){}.getType());
+        viewPager.setOffscreenPageLimit(0);//focus on showing one image
         viewPager.setAdapter(new GalleryPagerAdapter(this,images));
-        viewPager.setCurrentItem(getIntent().getIntExtra(SELECTED_ITEM,0));
+        viewPager.setCurrentItem(getIntent().getIntExtra(SELECTED_ITEM,0));//FIXME SELECTED_ITEM is always -1
     }
 }

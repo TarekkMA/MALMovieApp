@@ -4,6 +4,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.tmaproject.malmovieapp.models.networking.Review;
 
+import org.parceler.Parcel;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,7 @@ import java.util.List;
  * Created by tarekkma on 10/21/16.
  */
 
+@Parcel(Parcel.Serialization.BEAN)
 public class ReviewsRequestResult {
     @SerializedName("id")
     @Expose

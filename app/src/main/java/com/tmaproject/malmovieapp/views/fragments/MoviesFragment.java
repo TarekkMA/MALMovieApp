@@ -24,6 +24,9 @@ import com.tmaproject.malmovieapp.models.networking.Movie;
 import com.tmaproject.malmovieapp.models.networking.request_result.MovieRequestResult;
 import com.tmaproject.malmovieapp.views.adapters.MovieListAdapter;
 
+import org.parceler.Parcel;
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +41,14 @@ public class MoviesFragment extends Fragment {
 
     private static final String TAG = "MoviesFragment";
     private static final String ARG_MOVIES_TYPE = "moviesssType";
+    private static final String ARG_MOVIES_LIST = "ARG_MOVIES_LIST";
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(ARG_MOVIES_LIST, Parcels.wrap(movieListAdapter.getMoviesList()));
+    }
 
     public MoviesFragment() {
     }
@@ -73,17 +84,19 @@ public class MoviesFragment extends Fragment {
         moviesList.setLayoutManager(layoutManager);
         movieListAdapter = new MovieListAdapter();
         moviesList.setAdapter(movieListAdapter);
-        refreshLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requestMoviesFromServer();
-                hideLoading();
-            }
-        });
-        if(movieType == Movie.MovieType.FAVORITES){
-            requestMoviesFromDatabase();
-        }else {
+        refreshLayout.setOnClickListener(v -> {
             requestMoviesFromServer();
+            hideLoading();
+        });
+
+        if(savedInstanceState!=null && savedInstanceState.containsKey(ARG_MOVIES_LIST)){
+            movieListAdapter.setData(Parcels.unwrap(savedInstanceState.getParcelable(ARG_MOVIES_LIST)));
+        }else {
+            if (movieType == Movie.MovieType.FAVORITES) {
+                requestMoviesFromDatabase();
+            } else {
+                requestMoviesFromServer();
+            }
         }
         return rootView;
     }

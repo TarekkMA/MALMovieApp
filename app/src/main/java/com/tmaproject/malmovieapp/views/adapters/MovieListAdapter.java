@@ -36,6 +36,10 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.VH> 
                         .inflate(R.layout.item_movie,parent,false));
     }
 
+    public List<Movie> getMoviesList(){
+        return moviesList;
+    }
+
     public void addPage(List<Movie> newList){
         int oldLastIndex = moviesList.size()-1;
         moviesList.addAll(newList);

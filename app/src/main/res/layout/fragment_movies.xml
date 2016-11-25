@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:padding="8dp"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_marginBottom="64dp">
         <android.support.v4.widget.ContentLoadingProgressBar
             android:id="@+id/loading_bar"

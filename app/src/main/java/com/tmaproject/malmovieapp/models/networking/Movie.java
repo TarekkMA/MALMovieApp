@@ -10,7 +10,9 @@ import com.tmaproject.malmovieapp.models.networking.request_result.ReviewsReques
 import com.tmaproject.malmovieapp.models.networking.request_result.VideosRequestResult;
 
 import org.apache.commons.lang3.text.WordUtils;
+import org.parceler.Parcel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +24,9 @@ import java.util.List;
 /**************************************
  * HUGE THANKS TO jsonschema2pojo.org *
  **************************************/
-public class Movie {
+
+@Parcel(Parcel.Serialization.BEAN)
+public class Movie{
 
     public enum MovieType {
         LATEST("latest"),

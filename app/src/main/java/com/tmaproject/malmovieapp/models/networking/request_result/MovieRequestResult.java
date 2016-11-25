@@ -4,6 +4,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.tmaproject.malmovieapp.models.networking.Movie;
 
+import org.parceler.Parcel;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,7 @@ import java.util.List;
  * Created by tarekkma on 10/20/16.
  */
 
+@Parcel(Parcel.Serialization.BEAN)
 public class MovieRequestResult {
     @SerializedName("page")
     @Expose

@@ -26,7 +26,7 @@ import java.util.List;
  * Created by TarekMA on 10/30/16.
  */
 
-public class MovieImageVH extends BaseViewHolder<Movie> {
+public class MovieImageVH extends BaseViewHolder {
     private static final String TAG = "MovieVideosVH";
     private TextView header;
     private RecyclerView list;
@@ -39,11 +39,11 @@ public class MovieImageVH extends BaseViewHolder<Movie> {
     }
 
     @Override
-    public void bind(Movie data) {
-
-        List<Image> allLangImages = (data.getImages()==null)?
+    public void bind(Object data) {
+        Movie movie = (Movie)data;
+        List<Image> allLangImages = (movie.getImages()==null)?
                 new ArrayList<Image>()
-                :(isPoster)? data.getImages().getPosters() : data.getImages().getBackdrops();
+                :(isPoster)? movie.getImages().getPosters() : movie.getImages().getBackdrops();
 
         if (allLangImages.isEmpty())return;
 
@@ -72,7 +72,7 @@ public class MovieImageVH extends BaseViewHolder<Movie> {
                 return images.size();
             }
 
-            class VH extends BaseViewHolder<Image>{
+            class VH extends BaseViewHolder{
                 ImageView image;
                 public VH(View v) {
                     super(v);
@@ -83,14 +83,15 @@ public class MovieImageVH extends BaseViewHolder<Movie> {
                 }
 
                 @Override
-                public void bind(Image data) {
+                public void bind(Object data) {
+                    Image image = (Image)data;
                     Picasso.with(itemView.getContext())
-                            .load(TheMoviedbAPI.API_IMAGE_500+data.getFilePath())
+                            .load(TheMoviedbAPI.API_IMAGE_500+image.getFilePath())
                             .placeholder((isPoster)?R.drawable.placeholder_poster:R.drawable.placeholder_backdrop)
-                            .into(image);
+                            .into(this.image);
                     Context c = itemView.getContext();
-                    image.setOnClickListener(view ->
-                            c.startActivity(GalleryActivity.getIntent(c,(isPoster)?"Posters":"Backgrounds",images,images.indexOf(image))));
+                    this.image.setOnClickListener(view ->
+                            c.startActivity(GalleryActivity.getIntent(c,(isPoster)?"Posters":"Backgrounds",images,images.indexOf(this.image))));
                 }
             }
         });

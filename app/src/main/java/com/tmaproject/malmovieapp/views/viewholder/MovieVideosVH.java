@@ -24,7 +24,7 @@ import java.util.List;
  * Created by TarekMA on 10/30/16.
  */
 
-public class MovieVideosVH extends BaseViewHolder<Movie> {
+public class MovieVideosVH extends BaseViewHolder {
     private static final String TAG = "MovieVideosVH";
     private TextView header;
     private RecyclerView list;
@@ -35,13 +35,14 @@ public class MovieVideosVH extends BaseViewHolder<Movie> {
     }
 
     @Override
-    public void bind(Movie data) {
+    public void bind(Object data) {
+        Movie movie = (Movie)data;
         header.setText("Trailers");
         list.setLayoutManager(new LinearLayoutManager(itemView.getContext(),LinearLayoutManager.HORIZONTAL,false));
         Log.d(TAG, "bind: ");
 
         list.setAdapter(new RecyclerView.Adapter() {
-            List<Video> videos = (data.getVideos()==null)?new ArrayList<Video>():data.getVideos().getResults();
+            List<Video> videos = (movie.getVideos()==null)?new ArrayList<Video>():movie.getVideos().getResults();
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 return new VH(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movie_video,parent,false));
@@ -57,7 +58,7 @@ public class MovieVideosVH extends BaseViewHolder<Movie> {
                 return videos.size();
             }
 
-            class VH extends BaseViewHolder<Video>{
+            class VH extends BaseViewHolder{
                 ImageView videoImg;
                 TextView videoText;
                 public VH(View v) {
@@ -67,13 +68,14 @@ public class MovieVideosVH extends BaseViewHolder<Movie> {
                 }
 
                 @Override
-                public void bind(Video data) {
+                public void bind(Object data) {
+                    Video video = (Video)data;
                     Picasso.with(itemView.getContext())
-                            .load(ImagesAPI.getYoutubeThumbnail(data.getKey()))
+                            .load(ImagesAPI.getYoutubeThumbnail(video.getKey()))
                             .placeholder(R.drawable.placeholder_backdrop)
                             .into(videoImg);
-                    videoText.setText(data.getName());
-                    itemView.setOnClickListener(view -> IntentHelper.watchYoutubeVideo(itemView.getContext(),data.getKey()));
+                    videoText.setText(video.getName());
+                    itemView.setOnClickListener(view -> IntentHelper.watchYoutubeVideo(itemView.getContext(),video.getKey()));
                 }
             }
         });

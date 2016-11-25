@@ -80,15 +80,28 @@
 
         </uk.co.deanwild.flowtextview.FlowTextView>
 
+    <TextView android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Genres :"
+        android:paddingLeft="8dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="4dp"
+        android:textColor="#000"
+        android:id="@+id/genres_headerTV"
+        android:layout_below="@id/movie_plot"
+        android:visibility="gone"/>
 
     <com.tmaproject.malmovieapp.logic.TagLayout
+        android:visibility="gone"
         android:id="@+id/movie_genres"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_below="@id/movie_plot"/>
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_below="@id/genres_headerTV"/>
 
 </RelativeLayout>

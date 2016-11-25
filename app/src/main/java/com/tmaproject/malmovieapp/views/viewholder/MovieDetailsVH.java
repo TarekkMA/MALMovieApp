@@ -19,15 +19,16 @@ import uk.co.deanwild.flowtextview.FlowTextView;
  * Created by TarekMA on 10/30/16.
  */
 
-public class MovieDetailsVH extends BaseViewHolder<Movie> {
+public class MovieDetailsVH extends BaseViewHolder {
     public static final int layout = R.layout.item_movie_details;
     private ImageView posterIV, backgroundIV;
-    private TextView tagline, yearTV, rateingTV, durationTV;
+    private TextView tagline, yearTV, rateingTV, durationTV,genresHeaderTV;
     private FlowTextView overviewFTV;
     private FloatingActionButton fab;
     private TagLayout genresLayout;
 
     private boolean incompleteData = false;
+    private boolean genresAreListed = false;
     public MovieDetailsVH(View v) {
         super(v);
         posterIV = ((ImageView) v.findViewById(R.id.movie_poster));
@@ -38,12 +39,14 @@ public class MovieDetailsVH extends BaseViewHolder<Movie> {
         overviewFTV = (FlowTextView) v.findViewById(R.id.movie_plot);
         genresLayout = (TagLayout) v.findViewById(R.id.movie_genres);
         tagline = ((TextView) v.findViewById(R.id.movie_tagline));
+        genresHeaderTV = ((TextView) v.findViewById(R.id.genres_headerTV));
 
 
     }
 
     @Override
-    public void bind(Movie movie) {
+    public void bind(Object data) {
+        Movie movie = ((Movie) data);
         incompleteData = movie.getRuntime()==null;
 
         overviewFTV.setTextColor(itemView.getContext().getResources().getColor(android.R.color.secondary_text_light));
@@ -58,18 +61,23 @@ public class MovieDetailsVH extends BaseViewHolder<Movie> {
                 .placeholder(R.drawable.placeholder)
                 .into(posterIV);
 
+
         LayoutInflater layoutInflater = LayoutInflater.from(itemView.getContext());
 
-        if (incompleteData == false) durationTV.setText(movie.getRuntime() + " min");
-        if (movie.getGenres().isEmpty() == false && incompleteData == false){
-            incompleteData = true;
-            genresLayout.addView(layoutInflater.inflate(R.layout.item_genre_header, null, false));
+        if (incompleteData == false){
+            durationTV.setText(movie.getRuntime() + " min");
+            if(movie.getTagline().isEmpty() == false)tagline.setText("“ " + movie.getTagline() + " ”");
+            genresLayout.setVisibility(View.VISIBLE);
+            genresHeaderTV.setVisibility(View.VISIBLE);
+        }
+        if (movie.getGenres().isEmpty() == false && incompleteData == false && genresAreListed == false){
+            incompleteData = true;genresAreListed = true;
+            genresHeaderTV.setText("Genres :");
             for (Genre genre : movie.getGenres()) {
-                View genreView = layoutInflater.inflate(R.layout.item_genre, null, false);
+                View genreView = layoutInflater.inflate(R.layout.item_genre, genresLayout, false);
                 TextView tagTextView = (TextView) genreView.findViewById(R.id.genre_item_text);
                 tagTextView.setText(genre.getName());
                 genresLayout.addView(genreView);
-                tagline.setText("“ " + movie.getTagline() + " ”");
             }
         }
 

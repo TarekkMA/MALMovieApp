@@ -1,5 +1,6 @@
 package com.tmaproject.malmovieapp.views.activities;
 
+import android.os.PersistableBundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,15 +17,17 @@ import com.tmaproject.malmovieapp.models.networking.Movie;
 import com.tmaproject.malmovieapp.views.adapters.SectionsPagerAdapter;
 import com.tmaproject.malmovieapp.views.fragments.MoviesFragment;
 
+import icepick.Icepick;
+import icepick.State;
+
 public class MainActivity extends AppCompatActivity {
 
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    private ViewPager mViewPager;
+    SectionsPagerAdapter mSectionsPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -35,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
         mSectionsPagerAdapter.addFragment(MoviesFragment.newInstance(Movie.MovieType.TOP_RATED), Movie.MovieType.TOP_RATED.getTitle());
         mSectionsPagerAdapter.addFragment(MoviesFragment.newInstance(Movie.MovieType.FAVORITES), Movie.MovieType.FAVORITES.getTitle());
 
-        mViewPager = (ViewPager) findViewById(R.id.container);
+
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 

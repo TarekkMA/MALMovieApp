@@ -7,10 +7,10 @@ import android.view.View;
  * Created by TarekMA on 10/30/16.
  */
 
-public abstract class BaseViewHolder<T> extends RecyclerView.ViewHolder {
-    public BaseViewHolder(View itemView) {
+public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
+    BaseViewHolder(View itemView) {
         super(itemView);
     }
 
-    abstract public void bind(T data);
+    abstract public void bind(Object data);
 }
