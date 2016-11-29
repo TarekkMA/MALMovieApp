@@ -47,6 +47,7 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         viewsOrder.add(BACKDROP);
         int loadedReviewCount = movie.getReviews().getResults().size();
         if (loadedReviewCount <= movie.getReviews().getTotalResults()) isThereMoreToLoad = false;
+        if(loadedReviewCount>0)viewsOrder.add(REVIEWS_HEADER);
         for (int i = 0; i < loadedReviewCount; i++) {
             viewsOrder.add(REVIEW);
         }

@@ -1,21 +1,15 @@
 package com.tmaproject.malmovieapp.views.adapters;
 
-import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
-import com.google.gson.Gson;
-import com.snappydb.SnappydbException;
-import com.squareup.picasso.Picasso;
-import com.tmaproject.malmovieapp.MyApp;
 import com.tmaproject.malmovieapp.R;
-import com.tmaproject.malmovieapp.logic.TheMoviedbAPI;
 import com.tmaproject.malmovieapp.models.networking.Movie;
-import com.tmaproject.malmovieapp.views.activities.MovieDetailsActivity;
+import com.tmaproject.malmovieapp.views.viewholder.BaseViewHolder;
+import com.tmaproject.malmovieapp.views.viewholder.MovieDumbVH;
+import com.tmaproject.malmovieapp.views.viewholder.MoviePosterVH;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,70 +19,83 @@ import java.util.List;
  * facebook/tarekkma1
  */
 
-public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.VH> {
+public class MovieListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
-    private List<Movie> moviesList =  new ArrayList<>();
+    private boolean isThereMoreToLoad = true;
+    private int currantPage = 0;
+    private List<Movie> moviesList = new ArrayList<>();
+    private InfiniteRecyclerView loadMoreCallback;
 
-    @Override
-    public VH onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new VH(
-                LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.item_movie,parent,false));
+    private static final int MOVIE = 177;
+    private static final int LOADING = 905;
+
+    public MovieListAdapter(InfiniteRecyclerView loadMoreCallback) {
+        this.loadMoreCallback = loadMoreCallback;
     }
 
-    public List<Movie> getMoviesList(){
+    @Override
+    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == LOADING)
+            return new MovieDumbVH(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_loading, parent, false));
+        else return new MoviePosterVH(
+                LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_movie, parent, false));
+    }
+
+    public List<Movie> getMoviesList() {
         return moviesList;
     }
 
-    public void addPage(List<Movie> newList){
-        int oldLastIndex = moviesList.size()-1;
-        moviesList.addAll(newList);
-        notifyItemRangeChanged(oldLastIndex,moviesList.size()-1);
+    public int getCurrantPage() {
+        return currantPage;
     }
 
-    public void setData(List<Movie> newList){
+    public void addPage(List<Movie> newList) {
+        if(newList == null||newList.isEmpty()){
+            isThereMoreToLoad = false;
+            notifyItemRemoved(moviesList.size()+1);
+            return;
+        }else {
+            currantPage++;
+            int oldLastIndex = moviesList.size() - 1;
+            moviesList.addAll(newList);
+            notifyItemRangeChanged(oldLastIndex, moviesList.size() - 1);
+        }
+    }
+
+    public void setData(List<Movie> newList,int currantPage) {
         moviesList = newList;
+        this.currantPage =currantPage;
         notifyDataSetChanged();
     }
 
     @Override
-    public void onBindViewHolder(VH holder, int position) {
-        holder.bind(moviesList.get(position));
+    public void onBindViewHolder(BaseViewHolder holder, int position) {
+        if (getItemViewType(position) == LOADING) {
+            holder.itemView.setVisibility(View.GONE);
+            if(position==0)return;
+            if (isThereMoreToLoad){
+                holder.itemView.setVisibility(View.VISIBLE);
+                loadMoreCallback.loadPage(currantPage+1);
+            }
+        } else {
+            holder.bind(moviesList.get(position));
+        }
     }
 
     @Override
     public int getItemCount() {
-        return moviesList.size();
+        return moviesList.size() + ((isThereMoreToLoad)?1:0) /*For loading indicator*/;
     }
 
-
-    class VH extends RecyclerView.ViewHolder{
-        ImageView posterIV;
-        ImageView favoriteStarIV;
-        VH(View itemView) {
-            super(itemView);
-            posterIV = (ImageView)itemView.findViewById(R.id.movie_item_poster);
-            favoriteStarIV = (ImageView)itemView.findViewById(R.id.movieFavoriteStar);
-        }
-        void bind(final Movie movie){
-            boolean isFavorite = false;
-            try {
-                isFavorite = MyApp.getInstance().getDBManager().getFavoritesDB().exists(movie.getId().toString());
-            } catch (SnappydbException e) {
-                e.printStackTrace();
-            }
-            favoriteStarIV.setVisibility((isFavorite)?View.VISIBLE:View.GONE);
-
-            Picasso.with(itemView.getContext())
-                    .load(TheMoviedbAPI.API_IMAGE_185 +movie.getPosterPath())
-                    .placeholder(R.drawable.placeholder)
-                    .into(posterIV);
-
-            itemView.setOnClickListener(v -> {
-                Context context = itemView.getContext();
-                context.startActivity(new Intent(context, MovieDetailsActivity.class)
-                .putExtra(MovieDetailsActivity.ARG_MOVIE_JSON,new Gson().toJson(movie,Movie.class)));
-            });
-        }
+    @Override
+    public int getItemViewType(int position) {
+        return (position == moviesList.size()) ? LOADING : MOVIE;
     }
+
+    public interface InfiniteRecyclerView {
+        void loadPage(int pageNum);
+    }
+
 }

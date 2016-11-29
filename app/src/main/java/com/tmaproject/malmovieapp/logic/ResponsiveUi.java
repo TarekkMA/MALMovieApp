@@ -9,7 +9,7 @@ import android.util.DisplayMetrics;
  */
 
 public class ResponsiveUi {
-    public static int getScale
+    public static int getScale;
     public static int calculateNoOfColumns(Context context,int itemWidthDp,boolean approximate) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
