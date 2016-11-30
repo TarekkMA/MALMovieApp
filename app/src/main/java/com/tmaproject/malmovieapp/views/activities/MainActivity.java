@@ -7,48 +7,62 @@ import android.support.v7.widget.Toolbar;
 
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.snappydb.DB;
 import com.snappydb.DBFactory;
 import com.tmaproject.malmovieapp.R;
+import com.tmaproject.malmovieapp.logic.ResponsiveUi;
+import com.tmaproject.malmovieapp.models.events.MovieSelectedEvent;
 import com.tmaproject.malmovieapp.models.networking.Movie;
 import com.tmaproject.malmovieapp.views.adapters.SectionsPagerAdapter;
+import com.tmaproject.malmovieapp.views.fragments.MainFragment;
+import com.tmaproject.malmovieapp.views.fragments.MovieDetailsFragment;
 import com.tmaproject.malmovieapp.views.fragments.MoviesFragment;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import icepick.Icepick;
 import icepick.State;
 
 public class MainActivity extends AppCompatActivity {
 
-    SectionsPagerAdapter mSectionsPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mSectionsPagerAdapter.addFragment(MoviesFragment.newInstance(Movie.MovieType.POPULAR), Movie.MovieType.POPULAR.getTitle());
-        mSectionsPagerAdapter.addFragment(MoviesFragment.newInstance(Movie.MovieType.TOP_RATED), Movie.MovieType.TOP_RATED.getTitle());
-        mSectionsPagerAdapter.addFragment(MoviesFragment.newInstance(Movie.MovieType.FAVORITES), Movie.MovieType.FAVORITES.getTitle());
-
-
-        ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setOffscreenPageLimit(2);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
-
-
+        if (ResponsiveUi.isTablet(this)==false){
+            findViewById(R.id.details).setVisibility(View.GONE);
+        }
     }
 
+    @Subscribe
+    public void movieSelected(MovieSelectedEvent event){
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.details, MovieDetailsFragment.newInstance(event.movie))
+                .commit();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

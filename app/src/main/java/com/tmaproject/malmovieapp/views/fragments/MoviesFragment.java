@@ -6,6 +6,7 @@ package com.tmaproject.malmovieapp.views.fragments;
  */
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -177,7 +178,8 @@ public class MoviesFragment extends Fragment implements MovieListAdapter.Infinit
     @Override
     public void loadPage(int pageNum) {
         if(movieType == Movie.MovieType.FAVORITES)
-            movieListAdapter.addPage(null);
+            //
+            new Handler().post(() -> movieListAdapter.addPage(null));
         else
             requestMoviesFromServer(pageNum);
     }

@@ -54,7 +54,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public void addPage(List<Movie> newList) {
         if(newList == null||newList.isEmpty()){
             isThereMoreToLoad = false;
-            notifyItemRemoved(moviesList.size()+1);
+            notifyDataSetChanged();
             return;
         }else {
             currantPage++;
