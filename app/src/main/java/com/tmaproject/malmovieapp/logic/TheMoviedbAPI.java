@@ -32,23 +32,21 @@ public class TheMoviedbAPI {
 
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
-    private static Interceptor apikeyInterceptor = new Interceptor() {
-        @Override
-        public Response intercept(Interceptor.Chain chain) throws IOException {
-            Request original = chain.request();
-            HttpUrl originalHttpUrl = original.url();
+    private static Interceptor apikeyInterceptor = chain -> {
+        Request original = chain.request();
+        HttpUrl originalHttpUrl = original.url();
 
-            HttpUrl url = originalHttpUrl.newBuilder()
-                    .addQueryParameter("api_key", Secrets.THEMOVIEDB_API_KEY)
-                    .build();
+        HttpUrl url = originalHttpUrl.newBuilder()
+                //.addQueryParameter("api_key", Secrets.THEMOVIEDB_API_KEY)/
+                .addQueryParameter("api_key",/*Adding api key like this isn't recommended*/"c47731ea1e10d39215bd02c846eaf928")
+                .build();
 
-            // Request customization: add request headers
-            Request.Builder requestBuilder = original.newBuilder()
-                    .url(url);
+        // Request customization: add request headers
+        Request.Builder requestBuilder = original.newBuilder()
+                .url(url);
 
-            Request request = requestBuilder.build();
-            return chain.proceed(request);
-        }
+        Request request = requestBuilder.build();
+        return chain.proceed(request);
     };
     private static HttpLoggingInterceptor loggingInterceptor =
             new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
