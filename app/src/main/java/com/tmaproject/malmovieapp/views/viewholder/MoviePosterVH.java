@@ -10,6 +10,8 @@ import com.snappydb.SnappydbException;
 import com.squareup.picasso.Picasso;
 import com.tmaproject.malmovieapp.MyApp;
 import com.tmaproject.malmovieapp.R;
+import com.tmaproject.malmovieapp.database.MovieProvider;
+import com.tmaproject.malmovieapp.logic.MovieProviderUtil;
 import com.tmaproject.malmovieapp.logic.ResponsiveUi;
 import com.tmaproject.malmovieapp.logic.TheMoviedbAPI;
 import com.tmaproject.malmovieapp.models.events.MovieSelectedEvent;
@@ -40,8 +42,8 @@ public class MoviePosterVH extends BaseViewHolder {
         Movie movie = (Movie) data;
         boolean isFavorite = false;
         try {
-            isFavorite = MyApp.getInstance().getDBManager().getFavoritesDB().exists(movie.getId().toString());
-        } catch (SnappydbException e) {
+            isFavorite = MovieProviderUtil.isMovieFavorite(itemView.getContext(),movie.getId());
+        } catch (Exception e) {
             e.printStackTrace();
         }
         favoriteStarIV.setVisibility((isFavorite) ? View.VISIBLE : View.GONE);

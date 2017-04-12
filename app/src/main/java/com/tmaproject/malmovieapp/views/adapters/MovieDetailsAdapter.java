@@ -33,25 +33,32 @@ public class MovieDetailsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     boolean fullDataArrived = false;
     List<Integer> viewsOrder = new ArrayList<>();
     Movie movie;
+    boolean isLocal;
 
-
-    public MovieDetailsAdapter(List<Integer> viewsOrder, Movie movie) {
+    public MovieDetailsAdapter(List<Integer> viewsOrder, Movie movie,boolean isLocal) {
         this.viewsOrder = viewsOrder;
         this.movie = movie;
+        this.isLocal = isLocal;
     }
 
-    public void fulfilData(Movie movie){
+    public void fulfilData(Movie movie,boolean local){
         this.movie = movie;
-        viewsOrder.add(R.layout.item_movie_video);
         viewsOrder.add(POSTER);
         viewsOrder.add(BACKDROP);
-        int loadedReviewCount = movie.getReviews().getResults().size();
-        if (loadedReviewCount <= movie.getReviews().getTotalResults()) isThereMoreToLoad = false;
-        if(loadedReviewCount>0)viewsOrder.add(REVIEWS_HEADER);
-        for (int i = 0; i < loadedReviewCount; i++) {
-            viewsOrder.add(REVIEW);
+        isThereMoreToLoad = false;
+        if(!local) {
+            viewsOrder.add(R.layout.item_movie_video);
+            int loadedReviewCount = movie.getReviews().getResults().size();
+            if (loadedReviewCount <= movie.getReviews().getTotalResults())
+                isThereMoreToLoad = false;
+            if (loadedReviewCount > 0) viewsOrder.add(REVIEWS_HEADER);
+            for (int i = 0; i < loadedReviewCount; i++) {
+                viewsOrder.add(REVIEW);
+            }
+            fullDataArrived = true;
+        }else{
+
         }
-        fullDataArrived = true;
         notifyDataSetChanged();
     }
 

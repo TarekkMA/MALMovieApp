@@ -1,6 +1,5 @@
 package com.tmaproject.malmovieapp.logic;
 
-import com.tmaproject.malmovieapp.Secrets;
 import com.tmaproject.malmovieapp.models.networking.Movie;
 import com.tmaproject.malmovieapp.models.networking.request_result.MovieRequestResult;
 

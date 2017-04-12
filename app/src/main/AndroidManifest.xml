@@ -26,6 +26,11 @@
             android:label="@string/title_activity_movie_details"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".views.activities.GalleryActivity" android:theme="@style/Theme.Transparent"/>
+
+        <provider
+            android:authorities="com.tmaproject.malmovieapp.MovieProvider"
+            android:name=".database.MovieProvider"/>
+
     </application>
 
 </manifest>

@@ -21,6 +21,7 @@ import com.snappydb.KeyIterator;
 import com.snappydb.SnappydbException;
 import com.tmaproject.malmovieapp.MyApp;
 import com.tmaproject.malmovieapp.R;
+import com.tmaproject.malmovieapp.logic.MovieProviderUtil;
 import com.tmaproject.malmovieapp.logic.ResponsiveUi;
 import com.tmaproject.malmovieapp.logic.TheMoviedbAPI;
 import com.tmaproject.malmovieapp.models.networking.Movie;
@@ -133,15 +134,8 @@ public class MoviesFragment extends Fragment implements MovieListAdapter.Infinit
     void requestMoviesFromDatabase(){
         hideLoading();
         try {
-            DB favDb = MyApp.getInstance().getDBManager().getFavoritesDB();
-            KeyIterator it = favDb.allKeysIterator();
-            List<Movie> movieList= new ArrayList<>();
-            while (it.hasNext()){
-                Movie m = favDb.getObject(it.next(1)[0],Movie.class);
-                movieList.add(m);
-            }
-            movieListAdapter.setData(movieList,0);
-        } catch (SnappydbException e) {
+            movieListAdapter.setData(MovieProviderUtil.getFavMovies(getContext()),0);
+        } catch (Exception e) {
             e.printStackTrace();
             viewRefresh();
         }

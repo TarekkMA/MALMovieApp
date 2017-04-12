@@ -51,9 +51,9 @@ public class Movie{
         }
     }
 
-    @SerializedName("isFavorite")
-    @Expose
-    private Boolean isFavorite = false;
+
+    //This var should be true if the movie is on the local DB
+    public boolean isLocal=false;
 
     @SerializedName("adult")
     @Expose
@@ -146,14 +146,6 @@ public class Movie{
     @Expose
     private MovieRequestResult recommendations;
 
-
-    public Boolean getIsFavorite() {
-        return isFavorite;
-    }
-
-    public void setIsFavorite(Boolean isFavorite) {
-        this.isFavorite = isFavorite;
-    }
 
     /**
      *

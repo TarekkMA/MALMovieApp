@@ -29,6 +29,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.tmaproject.malmovieapp.MyApp;
 import com.tmaproject.malmovieapp.R;
+import com.tmaproject.malmovieapp.logic.MovieProviderUtil;
 import com.tmaproject.malmovieapp.logic.TheMoviedbAPI;
 import com.tmaproject.malmovieapp.models.networking.Movie;
 import com.tmaproject.malmovieapp.views.adapters.MovieDetailsAdapter;
@@ -97,24 +98,20 @@ public class MovieDetailsFragment extends Fragment {
         movie = Parcels.unwrap(getArguments().getParcelable(ARG_MOVIE));
         List<Integer> viewOrder = new ArrayList<>();
         viewOrder.add(R.layout.item_movie_details);
-        adapter = new MovieDetailsAdapter(viewOrder, movie);
+        adapter = new MovieDetailsAdapter(viewOrder, movie,isFavorite);
         try {
-            isFavorite = MyApp.getInstance().getDBManager().getFavoritesDB().exists(movie.getId().toString());
-        } catch (SnappydbException e) {
+            isFavorite = MovieProviderUtil.isMovieFavorite(getContext(),movie.getId());
+        } catch (Exception e) {
             e.printStackTrace();
         }
         bindViews();
         setupViews();
-        if(movie.getGenres().isEmpty()){//A way to know if the movie has all the data
+        if(movie.getGenres().isEmpty() && !movie.isLocal){//A way to know if the movie has all the data
             fillViews(false);
             getDatafromServer();
         }else{
             fillViews(true);
         }
-
-    }
-
-    private void fill(){
 
     }
 
@@ -140,14 +137,16 @@ public class MovieDetailsFragment extends Fragment {
             try {
                 if (isFavorite) {
                     Snackbar.make(view, "\'" + "Movie" + "\' has been removed from the favorites",Snackbar.LENGTH_LONG).show();
-                    MyApp.getInstance().getDBManager().getFavoritesDB().del(movie.getId().toString());
+                    MovieProviderUtil.delMovie(getContext(),movie.getId());
+                    //MyApp.getInstance().getDBManager().getFavoritesDB().del(movie.getId().toString());
                 } else {
                     Snackbar.make(view, "\'" + "Movie" + "\' has been added to the favorites",Snackbar.LENGTH_LONG).show();
-                    MyApp.getInstance().getDBManager().getFavoritesDB().put(movie.getId().toString(), movie);
+                    MovieProviderUtil.addMovie(getContext(),movie);
+                    //MyApp.getInstance().getDBManager().getFavoritesDB().put(movie.getId().toString(), movie);
                 }
                 isFavorite = !isFavorite;
                 fab.setImageResource((isFavorite)?R.drawable.star_filled_96:R.drawable.star_unfilled_96);
-            } catch (SnappydbException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(getContext(), "Failed adding \'" + "the movie" + "\' to favorites", Toast.LENGTH_SHORT).show();
             }
@@ -180,7 +179,7 @@ public class MovieDetailsFragment extends Fragment {
         collapsingToolbarLayout.setTitle(movie.getTitle());
 
         if (extendedInfo) {
-            adapter.fulfilData(movie);
+            adapter.fulfilData(movie,isFavorite);
             Log.d(TAG, "fillViews: Hey adapter view more data");
         }
 
