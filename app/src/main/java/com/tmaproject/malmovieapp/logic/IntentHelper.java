@@ -15,10 +15,11 @@ public class IntentHelper {
         Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
         Intent webIntent = new Intent(Intent.ACTION_VIEW,
                 Uri.parse("http://www.youtube.com/watch?v=" + id));
-        try {
+
+        if (appIntent.resolveActivity(c.getPackageManager()) != null)
             c.startActivity(appIntent);
-        } catch (ActivityNotFoundException ex) {
+        else
             c.startActivity(webIntent);
-        }
+
     }
 }

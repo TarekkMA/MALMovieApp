@@ -1,5 +1,6 @@
 package com.tmaproject.malmovieapp.logic;
 
+import com.tmaproject.malmovieapp.BuildConfig;
 import com.tmaproject.malmovieapp.models.networking.Movie;
 import com.tmaproject.malmovieapp.models.networking.request_result.MovieRequestResult;
 
@@ -37,7 +38,7 @@ public class TheMoviedbAPI {
 
         HttpUrl url = originalHttpUrl.newBuilder()
                 //.addQueryParameter("api_key", Secrets.THEMOVIEDB_API_KEY)/
-                .addQueryParameter("api_key",/*Adding api key like this isn't recommended*/"c47731ea1e10d39215bd02c846eaf928")
+                .addQueryParameter("api_key", BuildConfig.TheMovieDBApiKey)
                 .build();
 
         // Request customization: add request headers

@@ -24,7 +24,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.snappydb.SnappydbException;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.tmaproject.malmovieapp.MyApp;
@@ -65,6 +64,7 @@ public class MovieDetailsFragment extends Fragment {
     private RecyclerView mainList;
     private MovieDetailsAdapter adapter;
 
+    private boolean fullyLoded = false;
 
 
     public static MovieDetailsFragment newInstance(Movie movie) {
@@ -138,13 +138,16 @@ public class MovieDetailsFragment extends Fragment {
                 if (isFavorite) {
                     Snackbar.make(view, "\'" + "Movie" + "\' has been removed from the favorites",Snackbar.LENGTH_LONG).show();
                     MovieProviderUtil.delMovie(getContext(),movie.getId());
+                    isFavorite = false;
                     //MyApp.getInstance().getDBManager().getFavoritesDB().del(movie.getId().toString());
-                } else {
+                } else if (fullyLoded) {
                     Snackbar.make(view, "\'" + "Movie" + "\' has been added to the favorites",Snackbar.LENGTH_LONG).show();
                     MovieProviderUtil.addMovie(getContext(),movie);
+                    isFavorite = true;
                     //MyApp.getInstance().getDBManager().getFavoritesDB().put(movie.getId().toString(), movie);
+                }else{
+                    Snackbar.make(view, "Please waite for the movie to load !",Snackbar.LENGTH_SHORT).show();
                 }
-                isFavorite = !isFavorite;
                 fab.setImageResource((isFavorite)?R.drawable.star_filled_96:R.drawable.star_unfilled_96);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -176,6 +179,9 @@ public class MovieDetailsFragment extends Fragment {
     }
 
     private void fillViews(boolean extendedInfo) {
+        fullyLoded = extendedInfo;
+
+
         collapsingToolbarLayout.setTitle(movie.getTitle());
 
         if (extendedInfo) {

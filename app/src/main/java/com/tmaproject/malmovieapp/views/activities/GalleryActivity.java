@@ -16,7 +16,6 @@ import com.tmaproject.malmovieapp.views.adapters.GalleryPagerAdapter;
 
 import java.util.List;
 
-import icepick.State;
 
 public class GalleryActivity extends AppCompatActivity {
     public static final String GALLERY_URLS = "GALLERY_URLS";

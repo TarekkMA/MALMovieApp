@@ -16,9 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.snappydb.DB;
-import com.snappydb.KeyIterator;
-import com.snappydb.SnappydbException;
 import com.tmaproject.malmovieapp.MyApp;
 import com.tmaproject.malmovieapp.R;
 import com.tmaproject.malmovieapp.logic.MovieProviderUtil;

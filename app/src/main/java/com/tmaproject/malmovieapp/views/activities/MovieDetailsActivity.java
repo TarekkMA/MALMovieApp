@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.snappydb.SnappydbException;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.tmaproject.malmovieapp.MyApp;

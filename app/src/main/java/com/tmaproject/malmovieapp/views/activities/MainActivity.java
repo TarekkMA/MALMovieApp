@@ -15,8 +15,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.snappydb.DB;
-import com.snappydb.DBFactory;
+
 import com.tmaproject.malmovieapp.R;
 import com.tmaproject.malmovieapp.logic.ResponsiveUi;
 import com.tmaproject.malmovieapp.models.events.MovieSelectedEvent;
@@ -28,9 +27,6 @@ import com.tmaproject.malmovieapp.views.fragments.MoviesFragment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-
-import icepick.Icepick;
-import icepick.State;
 
 public class MainActivity extends AppCompatActivity {
 

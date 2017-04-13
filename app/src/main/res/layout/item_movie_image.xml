@@ -10,7 +10,7 @@
             android:id="@+id/movie_image_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/demo_video"
+            tools:src="@drawable/demo_video"
             android:adjustViewBounds="true"
             android:layout_gravity="center"
             android:scaleType="centerCrop"/>

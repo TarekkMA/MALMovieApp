@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.google.gson.Gson;
-import com.snappydb.SnappydbException;
 import com.squareup.picasso.Picasso;
 import com.tmaproject.malmovieapp.MyApp;
 import com.tmaproject.malmovieapp.R;

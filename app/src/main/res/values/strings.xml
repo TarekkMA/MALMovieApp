@@ -8,4 +8,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="loading_text">Please waite Fetching your data ...</string>
+    <string name="err_text">Something happened Click to refetch your data</string>
 </resources>
